@@ -1,0 +1,4 @@
+:set -isrc
+
+:load src/All.hs
+import All
