@@ -6,6 +6,7 @@ module All(
 
 import Test.Framework as A
 import Func as A
+import M00 as A
 import M01 as A
 import M02 as A
 import M03 as A
