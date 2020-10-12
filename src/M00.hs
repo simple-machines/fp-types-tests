@@ -76,7 +76,9 @@ perimeter = \s -> case s of
   Triangle a b c -> a + b + c
 
 perimeterAgain :: Shape -> Integer
-perimeterAgain = "abc"
+perimeterAgain (Circle r) = 2 * pie * r
+perimeterAgain (Rectangle w h) = (w + h) * 2
+perimeterAgain (Triangle a b c) = a + b + c
 
 -- if the type tells us the program, then why write the program?
 
