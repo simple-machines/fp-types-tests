@@ -2,6 +2,9 @@
 
 module M00 where
 
+value :: Integer
+value = 99
+
 {-
 Haskell syntax:
 
