@@ -2,8 +2,87 @@
 
 module M00 where
 
-value :: Integer
-value = 99
+x :: Integer
+x = 99
+
+func1 :: Integer -> Integer
+func1 a = a + 10
+
+-- (->) is right-associative
+
+-- first letter in func2 matches ['a'..'z']
+func2 :: Integer -> (Integer -> Integer)
+func2 a b = (a + b) * 2
+
+-- first letter in (.+.) does not match ['a'..'z']
+(.+.) :: Integer -> (Integer -> Integer)
+(.+.) a b = (a + b) * 2
+
+
+func1Again :: Integer -> Integer
+func1Again = \a -> a + 10 -- lambda expression
+
+func3 :: (Integer -> t) -> t
+func3 k = k 99
+
+func4 :: m -> k -> m
+func4 = \a    _ -> a
+
+-- in Java/C# constructors always have the same name as the data type
+-- in Haskell, they might but don't have to
+data ThreeIntegers = SomethingElse Integer Integer Integer
+  deriving (Eq, Show)
+
+name1 :: ThreeIntegers
+name1 = SomethingElse 44 55 66
+
+-- addThreeIntegers should add 3 Integers
+addThreeIntegers :: ThreeIntegers -> Integer
+-- pattern-matching with case/of
+addThreeIntegers = \three -> case three of SomethingElse a b c -> a + b + c
+
+addThreeIntegersAgain :: ThreeIntegers -> Integer
+addThreeIntegersAgain (SomethingElse a b c) = a + b + c
+
+-- class ThreeAnything<t> { ThreeAnything(t t1, t t2, t t3)
+data ThreeAnything t = ThreeAnything t t t
+  deriving (Eq, Show)
+
+addThreeAnythingInteger :: ThreeAnything Integer -> Integer
+addThreeAnythingInteger (ThreeAnything a b c) = a + b + c
+
+-- malicious programmer will try to introduce bug
+-- however, they cannot change the type
+-- what damage can the malicious programmer do?
+-- two other things
+firstValue :: ThreeAnything t -> t
+firstValue (ThreeAnything t1 _ _) = t1
+
+-- traditional unit testing
+testFirstValue :: Bool
+testFirstValue = firstValue (ThreeAnything 1 2 3) == (1 :: Integer)
+
+data Shape =
+  Circle Integer | Rectangle Integer Integer | Triangle Integer Integer Integer
+  deriving (Eq, Show)
+
+pie :: Integer
+pie = 3
+
+perimeter :: Shape -> Integer
+perimeter = \s -> case s of
+  Circle r -> 2 * r * pie
+  Rectangle w h -> (w + h) * 2
+  Triangle a b c -> a + b + c
+
+perimeterAgain :: Shape -> Integer
+perimeterAgain (Circle r) = 2 * pie * r
+perimeterAgain (Rectangle w h) = (w + h) * 2
+perimeterAgain (Triangle a b c) = a + b + c
+
+-- if the type tells us the program, then why write the program?
+
+-- \given these things then return -> this thing
 
 {-
 Haskell syntax:
