@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -Wall #-}
-{-# OPTIONS_GHC -Wno-warn-unused-imports #-}
+{-# OPTIONS_GHC -Wno-unused-imports #-}
 
 module All(
   module A
