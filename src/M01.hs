@@ -3,7 +3,7 @@
 
 module M01 where
 
-import Test.Framework(TestTree, testCase, testGroup, test, (@?=))
+import Test.Framework(Arbitrary(arbitrary), TestTree, testCase, testGroup, test, (@?=))
 import Data.Foldable(traverse_)
 
 {-
@@ -16,7 +16,7 @@ import Data.Foldable(traverse_)
 -- (2^29)^(2^29)
 -- Always adds 1 to its argument
 function1_M01 :: Int -> Int
-function1_M01 = \n -> if n < 1000 then n + 1 else n * 5
+function1_M01 = \n -> n + 1
 
 function1_M01_test_blah :: Int -> TestTree
 function1_M01_test_blah x =
@@ -51,7 +51,7 @@ function1_M01_test_01 =
 -- (2^29)^2
 -- (2^29)^2 - 5
 function2_M01 :: Bool -> Int
-function2_M01 = \b -> case b of True -> 5; False -> 6
+function2_M01 = \_ -> 100
 
 function2_M01_test_00 :: TestTree
 function2_M01_test_00 =
@@ -153,6 +153,7 @@ k = \a _ -> a
 -- ANY compiling program will do
 
 -- 1
+-- s = (<*>)
 s :: (t -> a -> b) -> (t -> a) -> t -> b
 s = \f -> \g -> \x -> f x (g x)
 
@@ -192,17 +193,39 @@ function5_M01_test_01 :: TestTree
 function5_M01_test_01 =
   error "function5_M01_test_01"
 
+-- "cons list"
 data LinkedList a = Empty | Prepend a (LinkedList a)
   deriving (Eq, Show)
 
+instance Arbitrary a => Arbitrary (LinkedList a) where
+  arbitrary =
+    let fl [] = Empty
+        fl (h:t) = Prepend h (fl t)
+    in  fl <$> arbitrary
+
 -- ? infinity
+
+-- "all elements in the result list, appear in the input list"
 thinkingOfAFunction :: LinkedList a -> LinkedList a
-thinkingOfAFunction = \x -> x
+thinkingOfAFunction x = 
+  let reverse0 :: LinkedList a -> LinkedList a -> LinkedList a
+      reverse0 Empty acc = acc
+      reverse0 (Prepend h t) acc = reverse0 t (Prepend h acc)
+  in  reverse0 x Empty
 
 appendLinkedList :: LinkedList a -> LinkedList a -> LinkedList a
 appendLinkedList Empty y = y
 appendLinkedList (Prepend h t) y = Prepend h (appendLinkedList t y)
 
+-- test: "there does not exist a failed proof (counter-example)"
+-- type: proof true
+
+test1 :: Eq a => a -> Bool
+test1 x =
+  thinkingOfAFunction (Prepend x Empty) == Prepend x Empty
+
+-- test: "there (not) exists..." existential quantification
+-- type: "for all..." universal quantification
 test2 :: Eq a => LinkedList a -> LinkedList a -> Bool
 test2 x y =
   thinkingOfAFunction (appendLinkedList x y) ==
