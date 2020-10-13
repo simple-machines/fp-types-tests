@@ -117,7 +117,7 @@ typeCast =
 -- 4
 -- YOU CAN'T DO ANYTHING WITH a
 function4_M01 :: a -> Bool -> Bool
-function4_M01 = \a b -> undefined
+function4_M01 = \_ -> id
 
 data I = I (Int -> Int)
 
@@ -127,7 +127,7 @@ class NoActuallyObject {
 -}
 
 instance Show I where
-  show (I i) = "hi"
+  show (I _) = "hi"
 
 
 class ToString a where
@@ -203,6 +203,7 @@ appendLinkedList :: LinkedList a -> LinkedList a -> LinkedList a
 appendLinkedList Empty y = y
 appendLinkedList (Prepend h t) y = Prepend h (appendLinkedList t y)
 
+test2 :: Eq a => LinkedList a -> LinkedList a -> Bool
 test2 x y =
   thinkingOfAFunction (appendLinkedList x y) ==
   appendLinkedList (thinkingOfAFunction y) (thinkingOfAFunction x)
